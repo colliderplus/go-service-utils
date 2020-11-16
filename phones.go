@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func PhoneParse(p string) (error, string) {
+func PhoneParse(p string) (string, error) {
 	re := regexp.MustCompile(`(?m)(\d+)`)
 	rs := re.FindAllString(p, -1)
 	p = strings.Join(rs, "")
@@ -25,35 +25,7 @@ func PhoneParse(p string) (error, string) {
 	}
 
 	if len(str) < 11 {
-		return errors.New("Invalid phone number"), ""
+		return "", errors.New("Invalid phone number")
 	}
-	return nil, str
-}
-
-func NameParse(name string) (error, []string) {
-	re := regexp.MustCompile(`(?m)([a-zA-Zа-яА-ЯёË]+)+`)
-	rs := re.FindAllString(name, -1)
-	if len(rs) < 1 {
-		return errors.New("InvalidName"), []string{}
-	}
-	return nil, rs
-}
-
-func PermalincValidate(permalink string) error {
-	permalink = strings.ToLower(permalink)
-	re := regexp.MustCompile(`(?m)([a-z0-9.]+)+`)
-	rs := re.FindAllString(permalink, -1)
-	str := strings.Join(rs, "")
-	if len(str) == len(permalink) {
-		return errors.New("InvalidCharactersInPermalink")
-	}
-	return nil
-}
-
-func ParseFeedDate(date string) (*time.Time, error) {
-	param, err := time.Parse(time.RFC3339Nano, date) //"2006-01-02T15:04:05.999999-07:00", date)
-	if err != nil {
-		return nil, err
-	}
-	return &param, nil
+	return str, nil
 }
